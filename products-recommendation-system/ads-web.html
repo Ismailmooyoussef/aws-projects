@@ -29,9 +29,9 @@
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.85.0.min.js"></script>
     <script>
 
-    var albumBucketName = "amr-people";
-    var bucketRegion = "us-east-1";
-    var IdentityPoolId = "us-east-1:1b6d48db-265d-4f4b-8eec-44ee31bdb8c7";
+    var albumBucketName = "XXXXXXXXXXXX";
+    var bucketRegion = "XXXXXXXXXXXX";
+    var IdentityPoolId = "XXXXXXXXXXX";
 
     AWS.config.update({
     region: bucketRegion,
@@ -62,11 +62,11 @@
                         print(err.message)
                     } else {
                         //successfully uploaded photo
-                        var apiinvokeurl = 'https://mf3430goia.execute-api.us-east-1.amazonaws.com/prod';
+                        var apiinvokeurl = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
                         var url =  apiinvokeurl + '?filename=' + file.name;
                         $.get(url, function(data){
                             $('#album-list').empty();
-                            var imageurl = 'https://s3.amazonaws.com/amr-ads/' + data;
+                            var imageurl = 'https://s3.amazonaws.com/XXXXXXXXXXXXXXXXXXXXX/' + data;
                             var htmlelements = [
                                 '<div class="gallery">',
                                 '<a target="_blank" href="' + imageurl + '"><img src="' + imageurl +'"/></a>',
