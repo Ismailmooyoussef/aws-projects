@@ -21,8 +21,9 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 exports.handler = (event, context, callback) => {
     
     //Configuration - Start
-    var srcBucket = 'amr-people';
-    var managerPhoneNumber = "+491733666656";
+    //Add source Bucket
+    var srcBucket = 'XXXXXXXXXXX';
+    var managerPhoneNumber = "XXXXXXXXXX";
     var table = "ads";
     //Configuration - End
  
