@@ -1,2 +1,1 @@
-# aws-projects
-Hands on AWS
+# Hands-On Projects for Amazon Web Services (AWS)
