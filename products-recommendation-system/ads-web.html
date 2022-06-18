@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+        div.gallery {
+            margin: 5px;
+            border: 1px solid #ccc;
+            float: left;
+            width: 200px;
+        }
+        div.gallery:hover {
+            border: 1px solid #777;
+        }
+        div.gallery img {
+            width: 100%;
+            height: auto;
+        }
+        div.desc {
+            padding: 10px;
+            text-align: center;
+            font-size:12px
+        }
+        div.source img {
+            width: 250px;
+            height: auto;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.85.0.min.js"></script>
+    <script>
+
+    var albumBucketName = "amr-people";
+    var bucketRegion = "us-east-1";
+    var IdentityPoolId = "us-east-1:1b6d48db-265d-4f4b-8eec-44ee31bdb8c7";
+
+    AWS.config.update({
+    region: bucketRegion,
+    credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: IdentityPoolId
+    })
+    });
+
+    $(document).ready(function(){
+
+        var s3 = new AWS.S3({
+            apiVersion: "2006-03-01",
+            params: {Bucket: albumBucketName}
+        });
+        $('#addphoto').click(function(event) {
+            var files = $('#photoupload').prop('files');
+            if (!files.length) {
+               return alert('Please choose a file to upload!');
+            }
+            var file = files[0];
+            s3.upload({
+                    Key: file.name,
+                    Bucket: albumBucketName,
+                    Body: file
+                }, function(err, data) {
+                    if (err) {
+                        return alert('Error uploading photo: ', err.message);
+                        print(err.message)
+                    } else {
+                        //successfully uploaded photo
+                        var apiinvokeurl = 'https://mf3430goia.execute-api.us-east-1.amazonaws.com/prod';
+                        var url =  apiinvokeurl + '?filename=' + file.name;
+                        $.get(url, function(data){
+                            $('#album-list').empty();
+                            var imageurl = 'https://s3.amazonaws.com/amr-ads/' + data;
+                            var htmlelements = [
+                                '<div class="gallery">',
+                                '<a target="_blank" href="' + imageurl + '"><img src="' + imageurl +'"/></a>',
+                                '</div>'
+                            ]
+                            var img = gethtml(htmlelements);
+                            $(img).appendTo('#album-list');
+                        });
+                    }
+            });
+        });
+       function gethtml(elements) {
+          return elements.join('\n');
+       }
+       $('#photoupload').on("change", function(e){
+           $('#output').attr('src',URL.createObjectURL(e.target.files[0]));
+           $('#album-list').empty();
+        });
+    });
+  </script>
+  </head>
+  <body>
+    <h1>Targeted Ad based on Facial, Demographic & Sentiment analysis</h1>
+    <div>
+        <input id="photoupload" type="file" accept="image/*">
+        <button id="addphoto">Fetch Advertisement</button>
+        <br/><br/>
+        <div class="source"><img id="output"/></div>
+    </div>
+    <hr/>
+    <br/>
+    <div id="album-list">
+    </div>
+  </body>
+</html>
